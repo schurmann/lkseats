@@ -1,12 +1,17 @@
 <template>
   <div class="list-group-item" v-show="visible">
-    <h5 class="mb-1">{{date}}</h5>
-    <p class="mb-1 text-primary"
-     v-for="cat in categories"
-     :key="cat.id"
-     :class="seatsClass(cat)">
-     {{cat.name}}: {{cat.available}}
-     </p>
+    <h5 class="mb-1">{{ performance.start | date }}</h5>
+    <div class="alert alert-warning" v-if="error">
+      Network error
+    </div>
+    <div v-else>
+      <p class="mb-1 text-primary"
+      v-for="cat in categories"
+      :key="cat.id"
+      :class="seatsClass(cat)">
+      {{cat.name}}: {{cat.available}}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -26,9 +31,16 @@ export default {
       default: false,
     },
   },
+  filters: {
+    date(value) {
+      if (!value) return '';
+      return moment(value).format('dddd H:mm');
+    },
+  },
   data() {
     return {
       categories: [],
+      error: false,
     };
   },
   created() {
@@ -39,11 +51,6 @@ export default {
       if (newVal) this.fetchData();
     },
   },
-  computed: {
-    date() {
-      return moment(this.performance.start).format('dddd H:mm');
-    },
-  },
   methods: {
     seatsClass(category) {
       return {
@@ -52,9 +59,13 @@ export default {
       };
     },
     fetchData() {
-      get(`/performances/${this.performance.id}`).then((json) => {
-        this.categories = json.availability;
-      });
+      get(`/performances/${this.performance.id}`)
+        .then((json) => {
+          this.categories = json.availability;
+        })
+        .catch(() => {
+          this.error = true;
+        });
     },
   },
 };

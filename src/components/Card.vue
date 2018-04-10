@@ -2,7 +2,10 @@
   <div class="card m-2 col-xl no-padding" style="width: 18rem;">
     <div class="card-body">
       <h4 class="card-title font-weight-bold">{{show.name}}</h4>
-      <div class="list-group list-group-flush" v-if="performances.length">
+      <div class="alert alert-warning" v-if="error">
+          Network error
+      </div>
+      <div class="list-group list-group-flush" v-else-if="!error && performances.length">
         <Performance
         v-for="perf in performances"
         :key="perf.id"
@@ -36,6 +39,7 @@ export default {
   data() {
     return {
       performances: [],
+      error: false,
     };
   },
   created() {
@@ -43,12 +47,16 @@ export default {
   },
   methods: {
     fetchData() {
-      get(`/shows/${this.show.id}/performances`).then((json) => {
-        json.forEach((val) => {
-          val.start = new Date(val.start);
+      get(`/shows/${this.show.id}/performances`)
+        .then((json) => {
+          json.forEach((val) => {
+            val.start = new Date(val.start);
+          });
+          this.performances = json;
+        })
+        .catch(() => {
+          this.error = true;
         });
-        this.performances = json;
-      });
     },
   },
 };

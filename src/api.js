@@ -14,6 +14,5 @@ export default function(url) {
 
   return fetch(`${API_URL}${url}`)
     .then(status)
-    .then(json)
-    .catch((reason) => console.error(reason));
+    .then(json);
 }

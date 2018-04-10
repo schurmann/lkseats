@@ -1,6 +1,9 @@
 <template>
   <div id='app' class="container">
-    <div class="row align-items-start">
+    <div class="alert alert-warning mt-5" v-if="error">
+      Network error
+    </div>
+    <div class="row align-items-start" v-else>
         <Card
           v-for="show in shows"
           :key="show.id"
@@ -25,6 +28,7 @@ export default {
     return {
       shows: [],
       currentDay: 18,
+      error: false,
     };
   },
   created() {
@@ -38,9 +42,13 @@ export default {
   },
   methods: {
     fetchData() {
-      get('/shows').then((json) => {
-        this.shows = json;
-      });
+      get('/shows')
+        .then((json) => {
+          this.shows = json;
+        })
+        .catch(() => {
+          this.error = true;
+        });
     },
   },
 };
