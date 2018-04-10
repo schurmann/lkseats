@@ -1,5 +1,5 @@
 <template>
-  <div id='app' class="container-fluid">
+  <div id='app' class="container">
     <div class="row align-items-start">
         <Card
           v-for="show in shows"
@@ -16,31 +16,30 @@
 import get from './api';
 import Card from './components/Card';
 
-const disallowed = ['Karneveljen', 'Uppropsfesten', 'Systemtest', 'Området'];
 export default {
   name: 'App',
   components: {
     Card,
   },
-  data: function data() {
+  data() {
     return {
       shows: [],
       currentDay: 18,
     };
   },
-  created: function created() {
+  created() {
     this.fetchData();
   },
-  mounted: function mounted() {
+  mounted() {
     setInterval(() => {
       this.currentDay += 1;
       if (this.currentDay > 20) this.currentDay = 18;
-    }, 300 * 1000);
+    }, 10 * 1000);
   },
   methods: {
-    fetchData: function fetchData() {
-      get('/public/shows').then((json) => {
-        this.shows = json.filter((show) => !disallowed.includes(show.name));
+    fetchData() {
+      get('/shows').then((json) => {
+        this.shows = json;
       });
     },
   },

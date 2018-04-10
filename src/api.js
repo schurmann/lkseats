@@ -1,7 +1,6 @@
-// const API_URL = process.env.API_URL;
-const API_URL = 'https://api-dev.lkticket.net';
+const API_URL = process.env.API_URL;
 
-export default function (url) {
+export default function(url) {
   const status = (response) => {
     if (response.ok) {
       return response;
@@ -11,14 +10,10 @@ export default function (url) {
     throw error;
   };
 
-  const json = response => response.json();
+  const json = (response) => response.json();
 
-  const options = {
-    cors: 'cors',
-  };
-
-  return fetch(`${API_URL}${url}`, options)
+  return fetch(`${API_URL}${url}`)
     .then(status)
     .then(json)
-    .catch(reason => console.error(reason));
+    .catch((reason) => console.error(reason));
 }

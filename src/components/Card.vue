@@ -5,9 +5,9 @@
       <div class="list-group list-group-flush" v-if="performances.length">
         <Performance
         v-for="perf in performances"
-        v-show="filterOnDay(perf)"
         :key="perf.id"
         :performance="perf"
+        :visible="perf.start.getDate() === day"
         />
       </div>
       <p v-else>No performances!</p>
@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import moment from 'moment';
 import get from '../api';
 import Performance from './Performance';
 
@@ -34,24 +33,17 @@ export default {
       required: true,
     },
   },
-  data: function data() {
+  data() {
     return {
       performances: [],
     };
   },
-  created: function created() {
+  created() {
     this.fetchData();
   },
   methods: {
-    date: function date(performance) {
-      const d = new Date(performance.start);
-      return moment(d).format('dddd hh:MM');
-    },
-    filterOnDay: function filterOnDay(performance) {
-      return performance.start.getDate() === this.day;
-    },
-    fetchData: function fetchData() {
-      get(`/public/shows/${this.show.id}/performances`).then((json) => {
+    fetchData() {
+      get(`/shows/${this.show.id}/performances`).then((json) => {
         json.forEach((val) => {
           val.start = new Date(val.start);
         });

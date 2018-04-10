@@ -1,11 +1,11 @@
 <template>
-  <div class="list-group-item">
-    <h5 class="mb-1">{{date(performance)}}</h5>
+  <div class="list-group-item" v-show="visible">
+    <h5 class="mb-1">{{date}}</h5>
     <p class="mb-1 text-primary"
      v-for="cat in categories"
      :key="cat.id"
-     v-bind:class="seatsClass(cat)">
-     {{cat.name}}: {{cat.ticketCount}}
+     :class="seatsClass(cat)">
+     {{cat.name}}: {{cat.available}}
      </p>
   </div>
 </template>
@@ -20,37 +20,41 @@ export default {
       type: Object,
       required: true,
     },
+    visible: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
-  data: function() {
+  data() {
     return {
       categories: [],
     };
   },
-  created: function() {
-    this.fetchData();
+  created() {
+    if (this.visible) this.fetchData();
   },
-  mounted: function() {
-    setInterval(() => {
-      this.fetchData();
-      console.log('hello');
-    }, 1000 * 30);
+  watch: {
+    visible(newVal) {
+      if (newVal) this.fetchData();
+    },
+  },
+  computed: {
+    date() {
+      return moment(this.performance.start).format('dddd H:mm');
+    },
   },
   methods: {
-    seatsClass: function(category) {
+    seatsClass(category) {
       return {
-        'text-warning': category.ticketCount && category.ticketCount <= 20,
-        'text-danger': !category.ticketCount,
+        'text-warning': category.available > 5 && category.available <= 20,
+        'text-danger': category.available <= 5,
       };
     },
-    date: function(performance) {
-      return moment(performance.start).format('dddd HH:MM');
-    },
-    fetchData: function() {
-      get(`/public/shows/${this.performance.show.id}/categories`).then(
-        (json) => {
-          this.categories = json;
-        }
-      );
+    fetchData() {
+      get(`/performances/${this.performance.id}`).then((json) => {
+        this.categories = json.availability;
+      });
     },
   },
 };
