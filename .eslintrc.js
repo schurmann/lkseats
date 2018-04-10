@@ -24,6 +24,10 @@ module.exports = {
   // add your custom rules here
   rules: {
     'no-console': 'off',
+    'func-names': 'off',
+    'space-before-function-paren': 'off',
+    'arrow-body-style': ['warn', 'as-needed'],
+    'arrow-parens': ['warn', 'always'],
     // don't require .vue extension when importing
     'import/extensions': [
       'error',
@@ -35,17 +39,7 @@ module.exports = {
     ],
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
-    'no-param-reassign': [
-      'error',
-      {
-        props: true,
-        ignorePropertyModificationsFor: [
-          'state', // for vuex state
-          'acc', // for reduce accumulators
-          'e', // for e.returnvalue
-        ],
-      },
-    ],
+    'no-param-reassign': ['error', { props: false }],
     // allow optionalDependencies
     'import/no-extraneous-dependencies': [
       'error',
