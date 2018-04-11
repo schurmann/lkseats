@@ -78,7 +78,9 @@ export default {
       get(`/performances/${this.performance.id}`).then((json) => {
         this.seats = totalSeats(json.availability);
         this.updated = true;
-        setInterval(() => (this.updated = false), 1000);
+        setInterval(() => {
+          this.updated = false;
+        }, 1000);
       });
     },
   },
