@@ -4,7 +4,7 @@
       Network error
     </div>
     <div class="row align-items-start" v-else>
-        <Card
+        <ShowCard
           v-for="show in shows"
           :key="show.id"
           :show="show"
@@ -16,13 +16,13 @@
 
 
 <script>
-import get from './api';
-import Card from './components/Card';
+import get from '../api';
+import ShowCard from './ShowCard';
 
 export default {
   name: 'App',
   components: {
-    Card,
+    ShowCard,
   },
   data() {
     return {
@@ -55,6 +55,6 @@ export default {
 </script>
 
 <style style lang="scss">
-@import '../styles/custom.scss';
-@import '../node_modules/bootstrap/scss/bootstrap.scss';
+@import '../../styles/custom.scss';
+@import '../../node_modules/bootstrap/scss/bootstrap.scss';
 </style>

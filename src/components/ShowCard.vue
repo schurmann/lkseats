@@ -6,7 +6,7 @@
           Network error
       </div>
       <div class="list-group list-group-flush" v-else-if="!error && performances.length">
-        <Performance
+        <PerformanceItem
         v-for="perf in performances"
         :key="perf.id"
         :performance="perf"
@@ -20,11 +20,12 @@
 
 <script>
 import get from '../api';
-import Performance from './Performance';
+import PerformanceItem from './PerformanceItem';
 
 export default {
+  name: 'ShowCard',
   components: {
-    Performance,
+    PerformanceItem,
   },
   props: {
     show: {

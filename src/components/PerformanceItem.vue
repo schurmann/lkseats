@@ -20,6 +20,7 @@ import moment from 'moment';
 import get from '../api';
 
 export default {
+  name: 'PerformanceItem',
   props: {
     performance: {
       type: Object,
@@ -28,7 +29,6 @@ export default {
     visible: {
       type: Boolean,
       required: true,
-      default: false,
     },
   },
   filters: {

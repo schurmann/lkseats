@@ -3,7 +3,7 @@
 import 'bootstrap';
 
 import Vue from 'vue';
-import App from './App';
+import App from './components/App';
 
 Vue.config.productionTip = true;
 
