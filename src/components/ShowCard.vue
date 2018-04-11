@@ -1,7 +1,7 @@
 <template>
   <div class="card m-2 col-xl no-padding" style="width: 18rem;">
     <div class="card-body">
-      <h4 class="card-title font-weight-bold">{{show.name}}</h4>
+      <h4 class="card-title text-center font-weight-bold">{{show.name}}</h4>
       <div class="alert alert-warning" v-if="error">
           Network error
       </div>
@@ -10,7 +10,7 @@
         v-for="perf in performances"
         :key="perf.id"
         :performance="perf"
-        :visible="perf.start.getDate() === day"
+        :visible="true"
         />
       </div>
       <p v-else>No performances!</p>
@@ -50,13 +50,21 @@ export default {
     fetchData() {
       get(`/shows/${this.show.id}/performances`)
         .then((json) => {
-          json.forEach((val) => {
+          json.sort((p1, p2) => p1.start > p2.start);
+          json.forEach((val, idx) => {
             val.start = new Date(val.start);
+            if (
+              idx === 0 ||
+              json[idx - 1].start.getHours() > val.start.getHours()
+            ) {
+              val.newDay = true;
+            }
           });
           this.performances = json;
         })
-        .catch(() => {
+        .catch((error) => {
           this.error = true;
+          console.error(error);
         });
     },
   },

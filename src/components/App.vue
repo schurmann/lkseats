@@ -1,5 +1,5 @@
 <template>
-  <div id='app' class="container">
+  <div id='app' class="container-fluid">
     <div class="alert alert-warning mt-5" v-if="error">
       Network error
     </div>
@@ -19,6 +19,8 @@
 import get from '../api';
 import ShowCard from './ShowCard';
 
+const disallowed = ['Området'];
+
 export default {
   name: 'App',
   components: {
@@ -34,17 +36,11 @@ export default {
   created() {
     this.fetchData();
   },
-  mounted() {
-    setInterval(() => {
-      this.currentDay += 1;
-      if (this.currentDay > 20) this.currentDay = 18;
-    }, 10 * 1000);
-  },
   methods: {
     fetchData() {
       get('/shows')
         .then((json) => {
-          this.shows = json;
+          this.shows = json.filter((show) => !disallowed.includes(show.name));
         })
         .catch(() => {
           this.error = true;
