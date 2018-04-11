@@ -28,6 +28,7 @@ module.exports = {
     'space-before-function-paren': 'off',
     'arrow-body-style': ['warn', 'as-needed'],
     'arrow-parens': ['warn', 'always'],
+    'no-mixed-operators': 'off',
     // don't require .vue extension when importing
     'import/extensions': [
       'error',
