@@ -81,6 +81,7 @@ export default {
         .then((json) => {
           this.categories = json.availability;
           this.seats = totalSeats(this.categories);
+          this.error = false;
         })
         .catch(() => {
           this.error = true;
@@ -105,9 +106,11 @@ export default {
           } else {
             callAfterTime(this.updatePerformance, 30 * 1000);
           }
+          this.error = false;
         })
         .catch(() => {
           callAfterTime(this.updatePerformance, 30 * 1000);
+          this.error = true;
         });
     },
   },

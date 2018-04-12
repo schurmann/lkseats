@@ -60,10 +60,12 @@ export default {
             }
           });
           this.performances = json;
+          this.error = false;
         })
         .catch((error) => {
           this.error = true;
           console.error(error);
+          setTimeout(() => this.fetchData(), 10 * 1000);
         });
     },
   },

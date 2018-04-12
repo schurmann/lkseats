@@ -40,9 +40,12 @@ export default {
       get('/shows')
         .then((json) => {
           this.shows = json.filter((show) => !disallowed.includes(show.name));
+          this.error = false;
         })
-        .catch(() => {
+        .catch((error) => {
           this.error = true;
+          console.error(error);
+          setTimeout(() => this.fetchData(), 10 * 1000);
         });
     },
   },
