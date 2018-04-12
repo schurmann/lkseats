@@ -25,8 +25,7 @@ const totalSeats = (performance) =>
   Object.values(performance).reduce((total, val) => total + val.available, 0);
 const randomInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
-const callAfterRandomTime = (f) =>
-  setTimeout(() => f(), randomInt(10, 60) * 1000);
+const callAfterTime = (f, ms) => setTimeout(() => f(), ms);
 export default {
   name: 'PerformanceItem',
   props: {
@@ -62,15 +61,10 @@ export default {
   created() {
     this.fetchData();
   },
-  mounted() {
-    setTimeout(() => {
-      this.updatePerformance();
-    }, randomInt(0, 60) * 1000);
-  },
   watch: {
     updated(newVal) {
       if (!newVal) {
-        callAfterRandomTime(this.updatePerformance);
+        callAfterTime(this.updatePerformance, randomInt(10, 60) * 1000);
       }
     },
   },
@@ -93,16 +87,28 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+          setTimeout(() => {
+            this.updatePerformance();
+          }, randomInt(10, 60) * 1000);
         });
     },
     updatePerformance() {
-      get(`/performances/${this.performance.id}`).then((json) => {
-        this.seats = totalSeats(json.availability);
-        this.updated = true;
-        setTimeout(() => {
-          this.updated = false;
-        }, 1000);
-      });
+      get(`/performances/${this.performance.id}`)
+        .then((json) => {
+          const seats = totalSeats(json.availability);
+          if (seats < this.seats) {
+            this.updated = true;
+            this.seats = seats;
+            setTimeout(() => {
+              this.updated = false;
+            }, 1000);
+          } else {
+            callAfterTime(this.updatePerformance, 30 * 1000);
+          }
+        })
+        .catch(() => {
+          callAfterTime(this.updatePerformance, 30 * 1000);
+        });
     },
   },
 };
