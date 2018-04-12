@@ -10,6 +10,7 @@
         v-for="perf in performances"
         :key="perf.id"
         :performance="perf"
+        :newDay="perf.newDay"
         />
       </div>
       <p v-else>No performances!</p>
@@ -29,10 +30,6 @@ export default {
   props: {
     show: {
       type: Object,
-      required: true,
-    },
-    day: {
-      type: Number,
       required: true,
     },
   },
@@ -58,6 +55,8 @@ export default {
               json[idx - 1].start.getHours() > val.start.getHours()
             ) {
               val.newDay = true;
+            } else {
+              val.newDay = false;
             }
           });
           this.performances = json;

@@ -1,6 +1,6 @@
 <template>
   <div class="list-group-item">
-    <div v-if="performance.newDay" class="text-center h4">
+    <div v-if="newDay" class="text-center h4">
       {{ performance.start | day }}
     </div>
     <div class="alert alert-warning" v-if="error">
@@ -9,7 +9,7 @@
     <CodeLoader v-else-if="loading"/>
     <div v-else class="d-flex flex-row justify-content-around h5 no-margin">
       <span>{{ performance.start | time }}</span>
-      <div :class="seatsClass(seats)" class="font-weight-bold text-primary">
+      <div :class="[seatsClass(seats), {'text-primary': seats > 20}]" class="font-weight-bold">
         {{seats}}
       </div>
     </div>
@@ -25,11 +25,17 @@ const totalSeats = (performance) =>
   Object.values(performance).reduce((total, val) => total + val.available, 0);
 const randomInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
+const callAfterRandomTime = (f) =>
+  setTimeout(() => f(), randomInt(10, 60) * 1000);
 export default {
   name: 'PerformanceItem',
   props: {
     performance: {
       type: Object,
+      required: true,
+    },
+    newDay: {
+      type: Boolean,
       required: true,
     },
   },
@@ -38,7 +44,6 @@ export default {
       categories: {},
       seats: -1,
       error: false,
-      newDay: '',
       updated: false,
       loading: true,
     };
@@ -59,10 +64,15 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      setInterval(() => {
-        this.updatePerformance();
-      }, 30 * 1000);
+      this.updatePerformance();
     }, randomInt(0, 60) * 1000);
+  },
+  watch: {
+    updated(newVal) {
+      if (!newVal) {
+        callAfterRandomTime(this.updatePerformance);
+      }
+    },
   },
   methods: {
     seatsClass(seats) {
@@ -89,7 +99,7 @@ export default {
       get(`/performances/${this.performance.id}`).then((json) => {
         this.seats = totalSeats(json.availability);
         this.updated = true;
-        setInterval(() => {
+        setTimeout(() => {
           this.updated = false;
         }, 1000);
       });
