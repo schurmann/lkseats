@@ -8,7 +8,6 @@
           v-for="show in shows"
           :key="show.id"
           :show="show"
-          :day="currentDay"
         />
     </div>
   </div>
