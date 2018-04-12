@@ -6,6 +6,7 @@
     <div class="alert alert-warning" v-if="error">
       Network error
     </div>
+    <CodeLoader v-else-if="loading"/>
     <div v-else class="d-flex flex-row justify-content-around h5 no-margin">
       <span>{{ performance.start | time }}</span>
       <div :class="seatsClass(seats)" class="font-weight-bold text-primary">
@@ -16,6 +17,7 @@
 </template>
 
 <script>
+import { CodeLoader } from 'vue-content-loader';
 import moment from 'moment';
 import get from '../api';
 
@@ -31,6 +33,17 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      categories: {},
+      seats: -1,
+      error: false,
+      newDay: '',
+      updated: false,
+      loading: true,
+    };
+  },
+  components: { CodeLoader },
   filters: {
     day(value) {
       if (!value) return '';
@@ -40,15 +53,6 @@ export default {
       if (!value) return '';
       return moment(value).format('H:mm');
     },
-  },
-  data() {
-    return {
-      categories: {},
-      seats: -1,
-      error: false,
-      newDay: '',
-      updated: false,
-    };
   },
   created() {
     this.fetchData();
@@ -72,6 +76,9 @@ export default {
         })
         .catch(() => {
           this.error = true;
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     updatePerformance() {
