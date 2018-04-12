@@ -10,7 +10,6 @@
         v-for="perf in performances"
         :key="perf.id"
         :performance="perf"
-        :visible="true"
         />
       </div>
       <p v-else>No performances!</p>

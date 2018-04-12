@@ -56,16 +56,20 @@ export default {
   },
   created() {
     this.fetchData();
-    setInterval(() => {
-      this.updatePerformance();
-    }, randomInt(1, 60) * 1000);
+  },
+  mounted() {
+    setTimeout(() => {
+      setInterval(() => {
+        this.updatePerformance();
+      }, 30 * 1000);
+    }, randomInt(0, 60) * 1000);
   },
   methods: {
     seatsClass(seats) {
       return {
         'text-warning': seats > 5 && seats <= 20,
         'text-danger': seats <= 5,
-        'animated shake': this.updated,
+        'animated infinite shake': this.updated,
       };
     },
     fetchData() {
