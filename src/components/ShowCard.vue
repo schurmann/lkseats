@@ -50,7 +50,8 @@ export default {
     fetchData() {
       get(`/shows/${this.show.id}/performances`)
         .then((json) => {
-          json.sort((p1, p2) => p1.start > p2.start);
+          // Some performances from shows are in reverse order...
+          json.sort((p1, p2) => p1.start - p2.start);
           json.forEach((val, idx) => {
             val.start = new Date(val.start);
             if (
