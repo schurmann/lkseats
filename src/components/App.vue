@@ -3,7 +3,7 @@
     <div class="alert alert-warning mt-5" v-if="error">
       Network error
     </div>
-    <div class="row align-items-start" v-else>
+    <div class="row align-items-start justify-content-center" v-else>
         <ShowCard
           v-for="show in shows"
           :key="show.id"
