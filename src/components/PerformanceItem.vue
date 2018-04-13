@@ -97,7 +97,7 @@ export default {
       get(`/performances/${this.performance.id}`)
         .then((json) => {
           const seats = totalSeats(json.availability);
-          if (seats < this.seats) {
+          if (seats !== this.seats) {
             this.updated = true;
             this.seats = seats;
             setTimeout(() => {
