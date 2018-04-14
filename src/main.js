@@ -4,8 +4,11 @@ import 'bootstrap';
 
 import Vue from 'vue';
 import App from './components/App';
+import get from './api';
 
-Vue.config.productionTip = true;
+Vue.config.productionTip = process.env.NODE_ENV === 'development';
+
+Vue.prototype.$get = get;
 
 /* eslint-disable no-new */
 new Vue({

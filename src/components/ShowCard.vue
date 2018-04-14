@@ -10,7 +10,7 @@
         v-for="perf in performances"
         :key="perf.id"
         :performance="perf"
-        :newDay="perf.newDay"
+        :visible="perf.start.getDate() === currentDay"
         />
       </div>
       <p v-else>No performances!</p>
@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import get from '../api';
 import PerformanceItem from './PerformanceItem';
 
 export default {
@@ -30,6 +29,10 @@ export default {
   props: {
     show: {
       type: Object,
+      required: true,
+    },
+    currentDay: {
+      type: Number,
       required: true,
     },
   },
@@ -44,28 +47,21 @@ export default {
   },
   methods: {
     fetchData() {
-      get(`/shows/${this.show.id}/performances`)
+      const vm = this;
+      this.$get(`/shows/${this.show.id}/performances`)
         .then((json) => {
           // Some performances from shows are in reverse order...
           json.sort((p1, p2) => p1.start - p2.start);
-          json.forEach((val, idx) => {
+          json.forEach((val) => {
             val.start = new Date(val.start);
-            if (
-              idx === 0 ||
-              json[idx - 1].start.getHours() > val.start.getHours()
-            ) {
-              val.newDay = true;
-            } else {
-              val.newDay = false;
-            }
           });
-          this.performances = json;
-          this.error = false;
+          vm.performances = json;
+          vm.error = false;
         })
         .catch((error) => {
-          this.error = true;
+          vm.error = true;
           console.error(error);
-          setTimeout(() => this.fetchData(), 10 * 1000);
+          setTimeout(() => vm.fetchData(), 10 * 1000);
         });
     },
   },

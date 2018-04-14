@@ -1,5 +1,6 @@
 <template>
   <div id='app' class="container-fluid">
+    <h1 class="text-center display-1 mt-2">{{ currentDay | dayFormat }}</h1>
     <div class="alert alert-warning mt-5" v-if="error">
       Network error
     </div>
@@ -8,6 +9,7 @@
           v-for="show in shows"
           :key="show.id"
           :show="show"
+          :currentDay="currentDay"
         />
     </div>
   </div>
@@ -15,10 +17,11 @@
 
 
 <script>
-import get from '../api';
 import ShowCard from './ShowCard';
 
 const disallowed = ['Området'];
+const days = ['Friday', 'Saturday', 'Sunday'];
+const interval = 15; // 15 seconds
 
 export default {
   name: 'App',
@@ -34,25 +37,36 @@ export default {
   },
   created() {
     this.fetchData();
+    setInterval(() => {
+      this.currentDay += 1;
+      if (this.currentDay > 20) this.currentDay = 18;
+    }, interval * 1000);
+  },
+  filters: {
+    dayFormat(val) {
+      if (!val) return '';
+      return days[val - 18];
+    },
   },
   methods: {
     fetchData() {
-      get('/shows')
+      const vm = this;
+      this.$get('/shows')
         .then((json) => {
-          this.shows = json.filter((show) => !disallowed.includes(show.name));
-          this.error = false;
+          vm.shows = json.filter((show) => !disallowed.includes(show.name));
+          vm.error = false;
         })
         .catch((error) => {
-          this.error = true;
+          vm.error = true;
           console.error(error);
-          setTimeout(() => this.fetchData(), 10 * 1000);
+          setTimeout(() => vm.fetchData(), 10 * 1000);
         });
     },
   },
 };
 </script>
 
-<style style lang="scss">
+<style lang="scss">
 @import '../../styles/custom.scss';
 @import '../../node_modules/bootstrap/scss/bootstrap.scss';
 </style>
