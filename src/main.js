@@ -3,9 +3,11 @@
 import 'bootstrap';
 
 import Vue from 'vue';
+import VueScrollTo from 'vue-scrollto';
 import App from './components/App';
 
-Vue.config.productionTip = true;
+Vue.use(VueScrollTo);
+Vue.config.productionTip = process.env.NODE_ENV === 'development';
 
 /* eslint-disable no-new */
 new Vue({

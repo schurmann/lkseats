@@ -1,5 +1,5 @@
 <template>
-  <div class="list-group-item">
+  <div class="list-group-item performance">
     <div v-if="newDay" class="text-center h4">
       {{ performance.start | day }}
     </div>
