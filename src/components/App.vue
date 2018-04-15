@@ -19,7 +19,7 @@
 <script>
 import ShowCard from './ShowCard';
 
-const disallowed = ['Området'];
+const disallowed = ['Området', 'Systemtest'];
 const days = ['Friday', 'Saturday', 'Sunday'];
 const interval = 15; // 15 seconds
 

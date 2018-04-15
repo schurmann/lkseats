@@ -13,7 +13,7 @@ jobs:
       - checkout
       - run:
         name: yarn install
-        command: yarn install
+        command: "yarn install"
       - deploy:
         name: deploy
-        command: ssh -o "StrictHostKeyChecking no" chauna@165.227.152.132 "cd ~/lkseats; git pull; yarn install; yarn run build"
+        command: "ssh -o 'StrictHostKeyChecking no' chauna@165.227.152.132 'cd ~/lkseats; git pull; yarn install; yarn run build'"
