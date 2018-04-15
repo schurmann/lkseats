@@ -3,8 +3,12 @@
 import 'bootstrap';
 
 import Vue from 'vue';
+import fontawesome from '@fortawesome/fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/fontawesome-free-solid';
 import App from './components/App';
 import get from './api';
+
+fontawesome.library.add(faChevronLeft, faChevronRight);
 
 Vue.config.productionTip = process.env.NODE_ENV === 'development';
 
